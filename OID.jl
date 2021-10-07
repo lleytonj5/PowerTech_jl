@@ -15,6 +15,8 @@ function OID(testCase :: MPCObject, T :: Int, T0 :: Int, solar :: Matrix{Float64
 	_, Vnom, Vmin, Vmax, V0, Pd, Qd, Pcap, Scap, A, B, C, D, PF = readGensMPC(testCase, nBuses)
 	inverterSize = 1.1
 
+	local V, Pcurt, Qc, Gug_I2R
+
 	if multiPer == 1
 		mpc = testCase
 		baseMVA = mpc.baseMVA
@@ -132,7 +134,7 @@ function OID(testCase :: MPCObject, T :: Int, T0 :: Int, solar :: Matrix{Float64
 			
 			# Validate results
 			Gug_check_Sreal[t-T0+1,:] = sqrt.(Qc.^2+(Pinj).^2) # FOR GRAPHS: real inverter capacity considering Pc
-			Gug_check_PF[t-T0+1,:] = cos(atan(abs(Qc)./(Pcap-Pcurt)))
+			Gug_check_PF[t-T0+1,:] = @. cos(atan(abs(Qc)/(Pcap-Pcurt)))
 			
 		end
 	end

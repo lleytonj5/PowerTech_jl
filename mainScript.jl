@@ -35,10 +35,16 @@ function main()
     PVsysEff = 0.8
     PVcap = PVsizeVec * PVsysEff
 
+    local V, Pcurt, Qc, Vmax, Gug_V, Gug_I2R, Gug_ITot, Gug_Vdrop, Gug_Preal, Gug_Sreal, Gug_PgTot, Gug_QgTot, Gug_I2RTot, Gug_PcTot, Gug_QcTot, Gug_max_Scap, Gug_max_Pcap, Gug_Pinj, Gug_check_PF, Gug_PcHH, Gug_Qc
+
     for i in 1:nRandCap
         solar, solarTotal, solarGen, loadHH, loadTotal, penetration, nBuses, Pd12, temp = dataInput(testCase, solarCap[i], PVcap, T)
 
         (V, Pcurt, Qc, Vmax, Gug_V, Gug_I2R, Gug_ITot, Gug_Vdrop, Gug_Preal, Gug_Sreal, Gug_PgTot, Gug_QgTot, Gug_I2RTot, Gug_PcTot, Gug_QcTot, Gug_max_Scap, Gug_max_Pcap, Gug_Pinj, Gug_check_PF, Gug_PcHH, Gug_Qc) = OID(testCase, T, T0, solar, loadHH, multiPer, per, plotting, PVcap, Pd12)
+    end
+
+    for value in (V, Pcurt, Qc, Vmax, Gug_V, Gug_I2R, Gug_ITot, Gug_Vdrop, Gug_Preal, Gug_Sreal, Gug_PgTot, Gug_QgTot, Gug_I2RTot, Gug_PcTot, Gug_QcTot, Gug_max_Scap, Gug_max_Pcap, Gug_Pinj, Gug_check_PF, Gug_PcHH, Gug_Qc)
+        println(value)
     end
 
     return
