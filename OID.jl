@@ -61,7 +61,7 @@ function OID(testCase :: MPCObject, T :: Int, T0 :: Int, solar :: Matrix{Float64
 			Pd[idxPV .- 1] = permutedims(Pd12[t, idxPV .- 1]) / baseMVA
 			Qd[idxPV .- 1] = permutedims(Pd12[t, idxPV .- 1]) * 0.7 / baseMVA
 			
-			data = parse_file("IEEE_18BUS_PV_modified.m")
+			data = parse_file("IEEE_18BUS_PV_computed.m")
 			powerModel = instantiate_model(data, SOCWRPowerModel, build_opf)
 			model = powerModel.model
 
