@@ -1,7 +1,7 @@
 import LinearAlgebra: I, Diagonal
 import SparseArrays: sparse, spdiagm, SparseMatrixCSC
 
-include("IEEE_18BUS_PV.jl")
+include("datafiles/IEEE_18BUS_PV.jl")
 include("dataInput.jl")
 include("makeYbus.jl")
 include("readMPC.jl")
