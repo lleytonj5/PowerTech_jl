@@ -1,6 +1,5 @@
 import Gurobi
 using JuMP
-using PowerModels
 
 # include("IEEE_18BUS_PV.jl")
 # include("readMPC.jl")

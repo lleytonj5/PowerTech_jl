@@ -1,6 +1,5 @@
 import LinearAlgebra: I, Diagonal
 import SparseArrays: sparse, spdiagm, SparseMatrixCSC
-using PowerModels
 
 include("IEEE_18BUS_PV.jl")
 include("dataInput.jl")
