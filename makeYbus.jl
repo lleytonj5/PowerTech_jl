@@ -1,5 +1,3 @@
-# import SparseArrays: sparse, SparseMatrixCSC
-
 #include("IEEE_18BUS_PV.jl")
 
 struct YbusResult
@@ -29,7 +27,7 @@ function makeYbus(testCase :: MPCObject)
     Ys = stat ./ (branch[:, BR_R] + 1im * branch[:, BR_X])
     Bc = stat .* branch[:, BR_B]
     tap = ones(nl, 1)
-    i = findall(x -> x != 0, branch[:, TAP])    # closest equivalent I can find to Matlab's "find" function
+    i = findall(x -> x != 0, branch[:, TAP])    # closest equivalent to Matlab's "find" function
     tap[i] = branch[i, TAP]
     tap = tap .* exp.(1im * pi / 180 * branch[:, SHIFT])
     Ytt = Ys + 1im * Bc / 2
@@ -44,7 +42,6 @@ function makeYbus(testCase :: MPCObject)
     Cf = sparse(1:nl, f, ones(nl), nl, nb)
     Ct = sparse(1:nl, t, ones(nl), nl, nb)
 
-    #i = permutedims(collect.([1:nl, 1:nl])) # not certain whether this works
     i = vec([1:nl 1:nl])
     Yf = sparse(i, [f; t], vec([Yff; Yft]), nl, nb)
     Yt = sparse(i, [f; t], vec([Ytf; Ytt]), nl, nb)

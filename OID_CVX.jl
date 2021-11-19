@@ -2,7 +2,8 @@ import Gurobi
 using Convex
 
 function quad_form_workaround(x::Convex.AbstractExpr, A::Matrix)
-	# From Convex.jl, but without the check (due to a bug)
+	# Implementation from Convex.jl, but without the check
+	# (due to a bug - see https://github.com/jump-dev/Convex.jl/issues/452)
 	P = sqrt(Convex.Hermitian(A))
 	return square(norm2(P * x))
 end
