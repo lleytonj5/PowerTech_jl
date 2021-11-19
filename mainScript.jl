@@ -1,25 +1,15 @@
 import LinearAlgebra: I, Diagonal
 import SparseArrays: sparse, spdiagm, SparseMatrixCSC
-import Gurobi
 using PowerModels
-# using JuMP
 
-println("Imports done.")
 include("IEEE_18BUS_PV.jl")
-println("Include 1 done.")
 include("dataInput.jl")
-println("Include 2 done.")
 include("makeYbus.jl")
-println("Include 3 done.")
 include("readMPC.jl")
-println("Include 4 done.")
 include("OID.jl")
-println("Include 5 done.")
 include("linesLoss.jl")
-println("Include 6 done.")
 
 function main()
-    println("Main started.")
     multiPer = 1
     per = 13
     T = 13
@@ -97,9 +87,5 @@ function main()
     return
 end
 
-println("Function defined.")
+println("Starting script.")
 main()
-# import ProfileView
-# using Profile
-# println("Starting.")
-# @ProfileView.profview main()

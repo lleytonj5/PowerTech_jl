@@ -9,7 +9,6 @@ end
 
 function OID(testCase :: MPCObject, T :: Int, T0 :: Int, solar :: Matrix{Float64}, loadHH :: Matrix{Float64},
 				multiPer :: Int, per :: Int, plotting :: Int, PVcap :: Matrix{Float64}, Pd12 :: Matrix{Float64})
-	println("OID started.")
 	_, ZBus, Ysc, Aa, Ymn, Imax, nBuses, _, nB = readLinesMPC(testCase)
 	_, Vnom, Vmin, Vmax, V0, Pd, Qd, Pcap, Scap, A, B, C, D, PF = readGensMPC(testCase, nBuses)
 	inverterSize = 1.1
@@ -59,7 +58,6 @@ function OID(testCase :: MPCObject, T :: Int, T0 :: Int, solar :: Matrix{Float64
 			problem = minimize(objective, constraints)
 
 			solve!(problem, Gurobi.Optimizer)
-			println("OID finished.")
 			return # For now, we just want to see if one works
 		end
 	end

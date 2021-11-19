@@ -1,5 +1,4 @@
 function readGensMPC(testCase :: MPCObject, nBuses :: Int)
-	println("Read Gens started.")
 	V0 = testCase.bus[1, 8]
 	Vnom = testCase.bus[2:end,8]
 	Vmin = testCase.bus[2:end,13]
@@ -26,12 +25,10 @@ function readGensMPC(testCase :: MPCObject, nBuses :: Int)
  
 	PF = 0.80
 
-	println("Read Gens finished.")
 	return (nGen, Vnom, Vmin, Vmax, V0, Pd, Qd, Pav, Sinj, A, B, C, D, PF)
 end
 
 function readLinesMPC(testCase :: MPCObject)
-	println("Read Lines started.")
 	nBuses = size(testCase.bus, 1)
 	nLines = size(testCase.branch, 1)
 	YBusSlack = makeYbus(testCase).Ybus
@@ -56,6 +53,5 @@ function readLinesMPC(testCase :: MPCObject)
 	# Matlab code for this line was Aa = spdiags(ones(nBuses,1), 0, nLines, nLines)* Cf - Ct
 	Aa = spdiagm(0 => ones(nBuses))[1:nLines, 1:nLines] * Cf - Ct
 
-	println("Read Lines finished.")
 	return (YBus, ZBus, Ysc, Aa, Ymn, Imax, nBuses, nLines, nB)
 end

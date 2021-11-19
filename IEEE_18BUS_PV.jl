@@ -11,7 +11,6 @@ struct MPCObject
 end
 
 function IEEE_18BUS_PV()
-    println("18BUS started.")
     mbase = 75
     mpc_baseMVA = mbase
     Pload = 0
@@ -136,6 +135,5 @@ function IEEE_18BUS_PV()
     mpc_Ibase = mpc_Sbase / mpc_Vbase
     mpc_branch[:, 6] /= mpc_Ibase
 
-    println("18BUS finished.")
     return MPCObject(mpc_baseMVA, mpc_bus, mpc_gen, mpc_branch, mpc_bus_name, mpc_gencost, mpc_Vbase, mpc_Sbase, mpc_Ibase)
 end

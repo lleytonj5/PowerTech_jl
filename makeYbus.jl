@@ -9,7 +9,6 @@ struct YbusResult
 end
 
 function makeYbus(testCase :: MPCObject)
-    println("makeYbus started.")
     baseMVA = testCase.baseMVA
     bus = testCase.bus
     branch = testCase.branch
@@ -51,6 +50,5 @@ function makeYbus(testCase :: MPCObject)
     Yt = sparse(i, [f; t], vec([Ytf; Ytt]), nl, nb)
 
     Ybus = Cf' * Yf + Ct' * Yt + sparse(1:nb, 1:nb, Ysh, nb, nb)
-    println("makeYbus finished.")
     return YbusResult(Ybus, Yf, Yt)
 end

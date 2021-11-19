@@ -60,10 +60,9 @@ function OID(testCase :: MPCObject, T :: Int, T0 :: Int, solar :: Matrix{Float64
 
 			Pd[idxPV .- 1] = permutedims(Pd12[t, idxPV .- 1]) / baseMVA
 			Qd[idxPV .- 1] = permutedims(Pd12[t, idxPV .- 1]) * 0.7 / baseMVA
-			
-			data = parse_file("IEEE_18BUS_PV_computed.m")
-			powerModel = instantiate_model(data, SOCWRPowerModel, build_opf)
-			model = powerModel.model
+
+			# Create the JuMP model
+			model = JuMP.Model(Gurobi.Optimizer)
 
 			# Variables
 			@variable(model, Vreal[1:nBuses - 1]) # complex
@@ -89,21 +88,16 @@ function OID(testCase :: MPCObject, T :: Int, T0 :: Int, solar :: Matrix{Float64
 			@constraint(model, c5, Vimag .== imag(ZBus) * (Pcap - Pcurt - Pd) - real(ZBus) * (Qc - Qd))
 			@constraint(model, c6, Vmin .<= Vnom + real(ZBus) * (Pcap - Pcurt - Pd) + imag(ZBus) * (Qc - Qd))
 			@constraint(model, c61, Vnom + real(ZBus) * (Pcap - Pcurt - Pd) + imag(ZBus) * (Qc - Qd) .<= Vmax)
-			#V = complex.(Vreal, Vimag) # Combine parts back into complex numbers
-			#V = ((x, y) -> [x y]).(Vreal, Vimag)
+
 			# Delta_Vreal = Aa * [V0; Vreal]
 			# Delta_Vimag = Aa * [V0; Vimag]
-			# println(Delta_Vreal)
-			# println(Delta_Vimag)
 			# @constraint(model, c7, -Imax <= real(Ysc .* Delta_Vreal) <= Imax)
 			# @constraint(model, c71, -Imax <= real(Ysc .* -Delta_Vimag) <= Imax)
-			# optimize!(model)
-			optimize_model!(powerModel; optimizer = Gurobi.Optimizer)
-			# break # For now, we just want to see if one works
+			optimize!(model)
 
 			Obj1, Obj2, Obj3 = (value(Obj1), value(Obj2), value(Obj3))
 			Vreal, Vimag, Pcurt, Qc = (value.(Vreal), value.(Vimag), value.(Pcurt), value.(Qc))
-			V = complex.(Vreal, Vimag)
+			V = complex.(Vreal, Vimag) # Combine parts back into complex numbers
 
 			save_objVal = [Obj1 Obj2 Obj3]
 			Gug_Obj[t-T0+1,:] = save_objVal
@@ -112,7 +106,7 @@ function OID(testCase :: MPCObject, T :: Int, T0 :: Int, solar :: Matrix{Float64
 			Vfull = [V0; V]
 			Gug_V[t-T0+1,:] = Vfull # voltage
 			Gug_I2R, Gug_Vdrop[t-T0+1,:], Gug_ITot[t-T0+1,:] = linesLoss(mpc, Vfull, nBuses)
-			
+
 			# Inverter
 			Gug_PcTot[t-T0+1] = sum(Pcurt) # TOTAL PV output curtailment
 			Gug_QcInd[t-T0+1,:] = Qc # HH PV reactive power
@@ -126,16 +120,16 @@ function OID(testCase :: MPCObject, T :: Int, T0 :: Int, solar :: Matrix{Float64
 			Gug_Pinj[t-T0+1,:] = Pinj
 			Gug_Qc[t-T0+1,:] = Qc
 			Gug_I2RTot[t-T0+1,:] = Gug_I2R # line loss
-			
+
 			# Grid
 			Gug_QgTot[t-T0+1,:] .= sum(Qd) * baseMVA # Q from grid
 			Gug_PgTot[t-T0+1,:] .= sum(Pd-(Pcap+Pcurt)) * baseMVA + sum(Gug_I2R) # P from grid (including line losses)
 			Gug_PFgTot[t-T0+1,:] .= sum(Pd) / sqrt((sum(Pd)).^2 + (sum(Qd)).^2) # PF at the substation
-			
+
 			# Validate results
 			Gug_check_Sreal[t-T0+1,:] = sqrt.(Qc.^2+(Pinj).^2) # FOR GRAPHS: real inverter capacity considering Pc
 			Gug_check_PF[t-T0+1,:] = @. cos(atan(abs(Qc)/(Pcap-Pcurt)))
-			
+
 		end
 	end
 
