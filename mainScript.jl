@@ -9,6 +9,7 @@ include("OID.jl")
 include("linesLoss.jl")
 
 function main()
+    println("Starting script.")
     multiPer = 1
     per = 13
     T = 13
@@ -77,14 +78,39 @@ function main()
         store_Gug_Qc1[i] = Gug_Qc * testCase.baseMVA
         store_Gug_PF[i] = Gug_check_PF
         store_Gug_PcHH[1,i] = Gug_PcHH * testCase.baseMVA
-    end
 
-    for value in (V, Pcurt, Qc, Vmax, Gug_V, Gug_I2R, Gug_ITot, Gug_Vdrop, Gug_Preal, Gug_Sreal, Gug_PgTot, Gug_QgTot, Gug_I2RTot, Gug_PcTot, Gug_QcTot, Gug_max_Scap, Gug_max_Pcap, Gug_Pinj, Gug_check_PF, Gug_PcHH, Gug_Qc)
-        println(value)
-    end
+        if !isdir("output/")
+            mkdir("output")
+        end
 
-    return
+        open("output/OID_V_1pm_no.txt", "w") do io
+            for s in ("Gug_V18", store_Gug_V18, "Gug_V9", store_Gug_V9, "Gug_V3", store_Gug_V3)
+                println(io, s)
+            end
+        end
+    
+        open("output/OIDf_PQ_1pm.txt", "w") do io
+            for s in ("Gug_Pc", store_Gug_Pc, "Gug_Qc", store_Gug_Qc, "Gug_Pg", store_Gug_Pg, "Gug_Qg", store_Gug_Qg)
+                println(io, s)
+            end
+        end
+    
+        open("output/OIDf_I2R_1pm.txt", "w") do io
+            for s in ("Gug_I2R", store_Gug_I2R, "Gug_I", store_Gug_I, "Gug_Preal", store_Gug_Preal, "Gug_Sreal", store_Gug_Sreal, "Gug_V", store_Gug_V, "Gug_Vdrop", store_Gug_Vdrop, "Gug_Scap", store_Gug_Scap, "Gug_Pcap", store_Gug_Pcap, "Gug_Pinj", store_Gug_Pinj, "Gug_PF", store_Gug_PF, "Gug_PcHH", store_Gug_PcHH)
+                println(io, s)
+            end
+        end
+    
+        open("output/OIDf_penet_1pm.txt", "w") do io
+            for s in ("Gug_Penet", store_Gug_Penet, "Gug_PVCap", store_Gug_PVCap, "Gug_PVGen", store_Gug_PVGen)
+                if (s isa String)
+                    println(io, s)
+                else
+                    println(io, s')
+                end
+            end
+        end
+    end
 end
 
-println("Starting script.")
 main()
